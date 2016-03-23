@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
+  <body>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+    <h2> Get predicted temperature for any day in the next 10 days</h2>
+    Day number (1 to 16)<input id="day" type="number"><br>
+    City,Country (use no space)<input id="place" type="n">
+    <button>Submit</button>
+    <script>
+      $("button").onClick(function(){
+
+        var day=$("input#day").val();
+        var city=$("input#place").val();
+
+        $.ajax(
+
+
+        )
+
+      })
+
+    </script>
+  </body>
+</html>

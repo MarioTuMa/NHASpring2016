@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Linear Search</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  </head>
+  <body>
+
+Name: <input type="text" id="name">
+<br>
+Score: <input type="number" id="score">
+<br>
+<button>Sumbit your score</button>
+
+
+<table></table>
+
+  <script>
+  var scores= [];
+var list=[];
+
+
+function maxim(arr){
+  var indmax = 0;
+  for(j=0; j<arr.length; j++){
+    console.log(indmax);
+    console.log((arr[indmax]).score);
+    console.log(arr[j]);
+    if((arr[j]).score > (arr[indmax]).score){
+      indmax = j;
+    }
+  }
+  return indmax;
+}
+
+function listout(){
+  list=[];
+  var tempscores = scores.slice();
+
+  console.log(tempscores[0]);
+  for(i=0;i<scores.length;i++){
+    var maxind = maxim(tempscores);
+      console.log(scores.length + "len");
+    console.log(maxind +" is max");
+    list.push((tempscores[maxind]));
+    console.log(list+" list during process");
+    console.log(maxind + " is index of " + (tempscores[maxind]).score );
+    tempscores.splice(maxind,1);
+
+  }
+$('table tbody > tr').remove();
+  for(k=0;k<list.length;k++){
+    $("table").append("<tr><td>"+(list[k]).name+": </td><td>"+(list[k]).score+"</td></tr>");
+  }
+}
+
+$("button").click(function(){
+
+  console.log(scores+" scores ");
+var name=$("#name").val();
+var score=parseInt($("#score").val());
+if(score<50){
+  alert("Sorry, you need a score of more than 50 to get on the leaderboard")
+}
+else{
+var datapoint={name:name, score:score};
+scores.push(datapoint);
+console.log(scores);
+listout();
+}});
+
+  </script>
+</body>
+</html>
