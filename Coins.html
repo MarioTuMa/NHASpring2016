@@ -1,0 +1,123 @@
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <title>Linear Search</title>
+</head>
+<body>
+
+
+  <button>Generate coins</button>
+  <p id="boop">abc</p>
+
+  <table id="table"></table>
+
+  <script>
+  var sums=[];
+ var maxsum=0;
+
+ function print(arr){
+   table.append("<tr><b>");
+
+   for(j=0;j<5;j++){
+
+     if(final[0].list[j]==1){
+       table.append("quarter ");
+     }
+     if(final[0].list[j]==2){
+
+       table.append("nickel ");
+     }
+     if(final[0].list[j]==3){
+
+       table.append("dime ");
+     }
+     if(final[0].list[j]==4){
+       table.append("penny ");
+     }
+   }
+
+   table.append("</b></tr>");
+ }
+   for(i=1;i<arr.length;i++){
+     table.append("<tr>");
+
+     for(j=0;j<5;j++){
+
+       if(final[i].list[j]==1){
+         table.append("quarter ");
+       }
+       if(final[i].list[j]==2){
+
+         table.append("nickel ");
+       }
+       if(final[i].list[j]==3){
+
+         table.append("dime ");
+       }
+       if(final[i].list[j]==4){
+         table.append("penny ");
+       }
+     }
+
+     table.append("</tr>");
+   }
+
+ function maxim(arr){
+   var indmax = 0;
+   for(j=0; j<arr.length; j++){
+
+     if((arr[j]).sum > (arr[indmax]).sum){
+       indmax = j;
+     }
+   }
+   return indmax;
+ }
+
+ $("button").click(function(){
+   console.log("confirmed");
+   var sum=0;
+   $("p#boop").css("background-color", "red");
+   var current=[];
+   for(i=0;i<5;i++){
+     var coin=4*(Math.random());
+     coin=Math.ceil(coin);
+     current.push(coin);
+
+     if(coin==1){
+       sum=sum+25;
+     }
+     if(coin==2){
+
+       sum=sum+5;
+     }
+     if(coin==3){
+
+       sum=sum+10;
+     }
+     if(coin==4){
+       sum=sum+1;
+     }
+
+
+   }
+   sums.push({sum:sum,
+     list:current});
+     console.log(sums[0].sum+" sum");
+     console.log(sums[0].list+" list");
+     console.log(sums);
+
+     var tempsums = sums.slice();
+     var final=[];
+     var length=tempsums.length;
+     for(i=0;i<length;i++){
+       var maxind = maxim(tempsums);
+       final.push(tempsums[maxind]);
+       sums.splice(maxind,1);
+
+     }
+     console.log(final[0].sum+" final");
+     print(final);
+   });
+    </script>
+  </body>
+  </html>
