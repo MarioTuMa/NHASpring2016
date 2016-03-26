@@ -17,22 +17,31 @@
 
 
     <h2> Get predicted temperature for any day in the next 10 days</h2>
-    Day number (1 to 16)<input id="day" type="number"><br>
+    Day number (1 to 7)<input id="day" type="number"><br>
     City,Country (use no space)<input id="place" type="n">
     <button>Submit</button>
+    <p id="result"></p>
     <script>
-      $("button").onClick(function(){
+      $("button").click(function(){
 
-        var day=$("input#day").val();
-        var city=$("input#place").val();
+        var day=$("#day").val();
+        var city=$("#place").val();
 
-        $.ajax(
+        $.ajax({
+          url: "http://api.openweathermap.org/data/2.5/forecast/daily?q="+city+"&mode=json&units=imperial&cnt=7&appid=28a057e95b9a5a8be15e896131b438a7",
+          success: function(result){
+            //console.log(result..min);
+          //  console.log(result.(day-1).max);
+          $("#result").html(result.list[day-1].temp.min+"<br>"+result.list[day-1].temp.max+"<br>"+result.list[day-1].weather[0].description+"<br>")
+          console.log(result.list[day-1].temp.min);
+          console.log(result.list[day-1].temp.max);
+          console.log(result.list[day-1].weather[0].description);
+          }
 
 
-        )
 
       })
-
+    })
     </script>
   </body>
 </html>
