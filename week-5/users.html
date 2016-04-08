@@ -1,0 +1,28 @@
+<head>
+    <title>Linear Search</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  </head>
+    <body>
+      <button id="button">It's a button</button>
+        <p id="p"></p>
+        <script>
+        $("button").click(function(){
+
+        $.ajax({
+  url: 'https://randomuser.me/api/',
+  dataType: 'json',
+  success: function(data){
+    console.log(data)
+var name=data.results[0].name.first+" "+data.results[0].name.last
+var gender="<br> I am a "+data.results[0].gender
+var contact=" <br> Contact Information: <br>"+data.results[0].email+", "+data.results[0].cell
+var location="<br> I am currently at home, which is "+data.results[0].location.street+ data.results[0].location.city+", "+data.results[0].location.state
+var username="<br><br>My username is "+data.results[0].login.username
+var picture="<br>This is a picture of me: <br> <img src='"+data.results[0].picture.large+"'>"
+  document.getElementById("p").innerHTML = name+gender+contact+location+username+picture
+  }
+});
+});
+        </script>
+    </body>
+  </html>
