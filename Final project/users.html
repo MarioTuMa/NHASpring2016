@@ -1,0 +1,61 @@
+<head>
+    <title>Linear Search</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  </head>
+    <body>
+      <h1> It is the year 3016 and humans have suffered a massive plague.</h1>
+       <h3>The remaining humans are scattered all over the earth. Help find new users to help save humanity.</h3>
+      <button id="button">It's a button</button>
+        <p id="p"></p>
+        <script>
+        $("button").click(function() {
+          var sick = Math.random() * 2
+          if (sick > 1) {
+            var message = "I am sick"
+          } else {
+            var message = "I am not sick"
+          }
+          $.ajax({
+            url: 'https://randomuser.me/api/',
+            dataType: 'json',
+            success: function(data) {
+              console.log(data)
+              var name = data.results[0].name.first + " " + data.results[0].name.last + " and " + message
+              var gender = "<br> I am a " + data.results[0].gender
+              var contact = " <br> Contact Information: <br>" + data.results[0].email + ", " + data.results[0].cell + "<br>"
+              var location = data.results[0].location.postcode
+                console.log(location)
+                $.ajax({
+                  url: 'http://maps.googleapis.com/maps/api/geocode/json?address=' +
+                  location,
+                  method: "GET",
+                  success: function(data) {
+                    console.log(data)
+                    var long = data.results[0].geometry.location.lng;
+                    var lat = data.results[0].geometry.location.lat;
+                    console.log([lat, long])
+                    var url = "https://api.nasa.gov/planetary/earth/imagery?lon=" + long + "&lat=" + lat + "&date=2014-02-01&cloud_score=True&api_key=px6mbCQT9eudUrxOLmhk8XqgqT6f7z3DHPRsnVJ9"
+                    console.log(url);
+                    var pictureurl = "<img src='" + url.url + "'>"
+                    $.ajax({
+                      url: url,
+                      method: "GET",
+                      success: function(data) {
+                          pictureurl = "<img src='" + data.url + "'>"
+                          console.log(pictureurl)
+                        }
+                      })
+                    }
+                  })
+
+                  var username = "<br><br>My username is " + data
+                  .results[0].login.username
+                  var picture = "<br>This is a picture of me: <br> <img src='" +
+                  data.results[0].picture.large + "'>"
+                  document.getElementById("p").innerHTML = name + gender + contact + pictureurl + username + picture
+                }
+              });
+            });
+        </script>
+    </body>
+  </html>
