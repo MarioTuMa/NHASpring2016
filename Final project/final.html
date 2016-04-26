@@ -1,7 +1,7 @@
 <head>
     <title>Linear Search</title>
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
-
+    <script src="http://yahoo.github.io/gifshot/"></script>
   </head>
     <body>
       <h1> It is the year 3016 and humans have suffered a massive plague.</h1>
@@ -43,7 +43,7 @@
                     var lat = datab.results[0].geometry.location.lat;
                     console.log([lat, long])
                     var url = "https://api.nasa.gov/planetary/earth/imagery?lon=" + long + "&lat=" + lat + "&date=2014-02-01&cloud_score=True&api_key=px6mbCQT9eudUrxOLmhk8XqgqT6f7z3DHPRsnVJ9"
-                    var googleurl="<img src='https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center="+lat+","+long+"&zoom=14&size=640x400&key=AIzaSyDJKlymwAXGSBqdl3YayHXgEO7nf3Ewyjk'>"
+                    var googleurl="<img src='https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center="+lat+","+long+"&zoom=14&size=512x512&key=AIzaSyDJKlymwAXGSBqdl3YayHXgEO7nf3Ewyjk'>"
                     console.log(url);
 
 
@@ -65,7 +65,7 @@
         animatedImage.src = image;
         document.body.appendChild(animatedImage);
     }
-});*/
+});       I am trying to make a gif of the picture zooming inbut I always get errors*/
                             document.getElementById("p").innerHTML = name + gender + contact + pictureurl + googleurl+ username + picture
 
                           }

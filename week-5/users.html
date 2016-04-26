@@ -3,26 +3,69 @@
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
   </head>
     <body>
+      <h1> It is the year 3016 and humans have suffered a massive plague.</h1>
+       <h3>The remaining humans are scattered all over the earth. Help find new users to help save humanity.</h3>
       <button id="button">It's a button</button>
         <p id="p"></p>
         <script>
-        $("button").click(function(){
+        var name
+        var gender
+        var contact
+        var location
+        var pictureurl
+        var username
+        var picture
+        function print(){
+          document.getElementById("p").innerHTML = name + gender + contact + pictureurl + username + picture;
+        }
+        $("button").click(function() {
+          var sick = Math.random() * 2
+          if (sick > 1) {
+            var message = "I am sick"
+          } else {
+            var message = "I am not sick"
+          }
+          $.ajax({
+            url: 'https://randomuser.me/api/',
+            dataType: 'json',
+            success: function(data) {
+              console.log(data)
+                  name = data.results[0].name.first + " " + data.results[0].name.last + " and " + message
+                  gender = "<br> I am a " + data.results[0].gender
+                  contact = " <br> Contact Information: <br>" + data.results[0].email + ", " + data.results[0].cell + "<br>"
+                  location = data.results[0].location.postcode
+                  pictureurl=$.ajax({
+                  url: 'http://maps.googleapis.com/maps/api/geocode/json?address=' +
+                  location,
+                  method: "GET",
+                  success: function(data) {
+                    console.log(data)
+                    var long = data.results[0].geometry.location.lng;
+                    var lat = data.results[0].geometry.location.lat;
+                    console.log([lat, long])
+                    var url = "https://api.nasa.gov/planetary/earth/imagery?lon=" + long + "&lat=" + lat + "&date=2014-02-01&cloud_score=True&api_key=px6mbCQT9eudUrxOLmhk8XqgqT6f7z3DHPRsnVJ9"
+                    console.log(url);
 
-        $.ajax({
-  url: 'https://randomuser.me/api/',
-  dataType: 'json',
-  success: function(data){
-    console.log(data)
-var name=data.results[0].name.first+" "+data.results[0].name.last
-var gender="<br> I am a "+data.results[0].gender
-var contact=" <br> Contact Information: <br>"+data.results[0].email+", "+data.results[0].cell
-var location="<br> I am currently at home, which is "+data.results[0].location.street+ data.results[0].location.city+", "+data.results[0].location.state
-var username="<br><br>My username is "+data.results[0].login.username
-var picture="<br>This is a picture of me: <br> <img src='"+data.results[0].picture.large+"'>"
-  document.getElementById("p").innerHTML = name+gender+contact+location+username+picture
-  }
-});
-});
+                    $.ajax({
+                      url: url,
+                      method: "GET",
+                      success: function(data) {
+                          pictureurl = "<img src='" + data.url + "'>"
+                          console.log(pictureurl+         "nasa")
+                          print();
+                        }
+                      })
+                      console.log(pictureurl+"           google")
+
+                    }
+                  })
+                      console.log(pictureurl+"          outside")
+                  username = "<br><br>My username is " + data.results[0].login.username
+                  picture = "<br>This is a picture of me: <br> <img src='" + data.results[0].picture.large + "'>"
+
+                }
+              });
+            });
         </script>
     </body>
   </html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+      html, body {
+        height: 80%;
+        margin: 1000;
+        padding: 100;
+      }
+      #map {
+        height: 80%;
+        width: 80%
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+  <body>
+    Name<input id="name">
+    Address <input id="address">
+    <div id="map"></div>
+    <button id="button">Place pin</button>
+    <script>
+
+      // This example displays a marker at the center of Australia.
+      // When the user clicks the marker, an info window opens.
+
+      function initMap() {
+        var place = ""
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4
+        });
+
+        var contentString = $("name").val()
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+  }
+  var address = document.getElementById("address").value;
+$.ajax{
+url: "http://maps.googleapis.com/maps/api/geocode/json?adress="+address+"&key=AIzaSyDvsuenBEoVxe36Ki6c7SLUZWOlMkJ8w_w",
+success: console.log(result[0])
+
+}
+  });
+} else {
+  alert("Geocode was not successful for the following reason: " + status);
+}
+});
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvUkQIwj-BN5GJRkudOrGZUA2ICuE97nQ&callback=initMap"
+    async defer></script>
