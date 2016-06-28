@@ -1,0 +1,30 @@
+
+<head>
+    <title>Linear Search</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  </head>
+  <body>
+
+Name: <input id="name"><br>
+Score: <input id="score"><br>
+<button style="font-size:10px">Put your data <br>out there....forever</button>
+
+
+
+
+  <script>
+  $("button").click(function(){
+    var site="http://data.sparkfun.com/input/5JXRxGva9Wc0oJnGoAYX?private_key=7BaAxq45zPc0MzpWM248&name="+name+"&score="+score,
+    console.log(site);
+    $.ajax({
+       method: "GET",
+       url: site
+       success: function(data){
+         console.log(data);
+       }
+    })
+  });
+
+  </script>
+</body>
+</html>

@@ -10,44 +10,46 @@
   Name<input id="name"><br>
   Score<input id="score"><br>
   <button id="hi">Nice job!</button>
-  <table></table>
+  <table id="table"></table>
   <script>
-    var scores=[];
-    var final=[];
-
-
-function print(){
-  $("table").clear;
-  console.log(final);
-  for(i=0;i<final.length;i++){
-    $("table").append("<tr><td>"+final[i].name+": </td>"+"<td>"+final[i].score+"</td></tr>");
+   var scores=[];
+   var finallist=[];
+   var maxind=0
+function post(arr){
+  for(i=0;i<arr.length;i++){
+    $("table").append("<tr><td>"+arr[i].name+"</td><td>"+arr[i].score+"</td></tr>")
   }
+  for(i=0;i<scores.length-1;i++){
+    document.getElementById("table").deleteRow(0);
 }
-
-
+}
 function sort(){
-  var tempscores=scores.slice();
-  for(var h=0;h<scores.length;h++){
-var maxind=0;
-  for(i=0;i<scores.length;i++){
+   var tempscores=scores.slice()
+   console.log(tempscores)
+   console.log(scores.length+" scores.length")
+   for(i=0;i<scores.length;i++){
+     maxind=0
 
-
-    if((tempscores[i]).score>tempscores[maxind].score){
-
-      maxind=i;
-    }
-    final.push(tempscores[maxind]);
-    tempscores.slice(maxind,0)
-  }
+     for(j=0;j<tempscores.length;j++){
+       if(tempscores[j].score>tempscores[maxind].score){
+         maxind=j
+       }
+     }
+     console.log(maxind)
+     finallist.push(tempscores[maxind]);
+     console.log(tempscores);
+     tempscores.splice(maxind,1);
+     console.log(tempscores);
+     console.log(finallist)
+   }
+   console.log(finallist);
+   post(finallist);
 }
-
-  print()
-}
-
 
 
 $("button").click(function(){
-  final=[];
+  console.log(scores)
+  finallist=[];
   var name=$("#name").val();
   var score=$("#score").val();
   var pair={
