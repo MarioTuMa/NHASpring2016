@@ -49,6 +49,8 @@ var hiturl;
 var playersum=0;
 var computersum=0;
 var compcard;
+var playeraces=0;
+var computeraces=0;
 function bust(bool){
   if(bool==true){
     var message="Computer Wins, haha"
@@ -75,11 +77,39 @@ function myFunction() {
 });
 }
 
-function evaluate(value){
+function evaluatep(value){
   if(value=="ACE"){
     console.log(value);
     value="11";
     console.log(value);
+    playeraces++
+  }
+  if(value=="JACK"){
+    console.log(value);
+    value="10";
+    console.log(value);
+  }
+  if(value=="QUEEN"){
+    console.log(value);
+    value="10";
+    console.log(value);
+
+  }
+  if(value=="KING"){
+    console.log(value);
+    value="10";
+    console.log(value);
+
+  }
+
+return parseInt(value);
+}
+function evaluatec(value){
+  if(value=="ACE"){
+    console.log(value);
+    value="11";
+    console.log(value);
+    computeraces++
   }
   if(value=="JACK"){
     console.log(value);
@@ -102,6 +132,8 @@ function evaluate(value){
 return parseInt(value);
 }
 $("#deal").click(function(){
+  playeraces=0
+  computeraces=0
   $("#player").empty();
   $("#ai").empty();
   console.log(url);
@@ -113,9 +145,9 @@ $("#deal").click(function(){
     var img2=output.cards[1].image;
     var img3=output.cards[2].image;
     console.log(img3);
-    var value1=evaluate(output.cards[0].value);
-    var value2=evaluate(output.cards[1].value);
-    var value3=evaluate(output.cards[2].value);
+    var value1=evaluatep(output.cards[0].value);
+    var value2=evaluatep(output.cards[1].value);
+    var value3=evaluatec(output.cards[2].value);
     playersum=value1+value2;
     computersum=value3;
     $("#player").append("<img src='"+img1+"'><img src='"+img2+"'>");
@@ -152,7 +184,7 @@ $("#hold").click(function(){
     $("#ai").empty();
     console.log(output);
     var img1=output.cards[0].image;
-    var value1=evaluate(output.cards[0].value);
+    var value1=evaluatep(output.cards[0].value);
     computersum=computersum+value1;
 
     $("#ai").append(compcard+"<img src='"+img1+"'>");
@@ -166,24 +198,34 @@ $("#hold").click(function(){
             while(computersum<parseInt($("#holdon").val())){
             var newcard=newcards.cards[counter]
             console.log(newcards);
-            var newvalue=evaluate(newcard.value);
+            var newvalue=evaluatec(newcard.value);
             var newimg=newcard.image
             console.log(newvalue);
             computersum=computersum+newvalue;
             $("#ai").append("<img src='"+newimg+"'>");
             console.log("<img src='"+newimg+"'>");
             counter++
+            if (computersum>21){
+              if(computeraces>0){
+                computeraces--;
+                computersum=computersum-10
+              }
+              else{
+              $("#ai").append("<br><h1>BUSTED</h1>")
+              bust(false)
+            }
+
           }
-          if (computersum>21){
-            $("#ai").append("<br><h1>BUSTED</h1>")
-            bust(false)
-          }
-          else{
+        }
+
+        if(playersum<22){
+          if(computersum<22){
             check()
           }
           }
-          });
 
+        }
+        });
   }
   });
 }
@@ -200,11 +242,17 @@ $("#hit").click(function(){
     console.log(output);
     var img1=output.cards[0].image;
 
-    var value1=evaluate(output.cards[0].value);
+    var value1=evaluatep(output.cards[0].value);
     playersum=playersum+value1;
     if(playersum>21){
+    if(playeraces>0){
+      playeraces--;
+      playersum=playersum-10
+    }
+    else{
       $("#player").append("<img src='"+img1+"'><br><h1>BUSTED</h1>");
       bust(true)
+    }
     }
     else{
     console.log(playersum);
