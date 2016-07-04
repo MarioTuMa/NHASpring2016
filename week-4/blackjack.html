@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<style>
+.card {
+    width: 250px;
+    height: 325px;
+
+}
+</style>
+<body onload="myFunction()">
+<h1>BLACKJACK</h1>
+<br>
+<br>
+<br>
+<button id="deal" style="font-size:10px">Deal <br>Out</button>
+<button id="hit" style="font-size:10px">Hit me with<br> your best shot</button>
+<button id="hold" style="font-size:10px">You can take<br>the hit</button>
+
+<br>
+<h3>Your Cards</h3>
+<br>
+<span id="player"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</span>
+<br>
+AI holds on <select id="holdon">
+  <option value=15>15</option>
+  <option value=16>16</option>
+  <option value=17>17</option>
+
+</select>
+<h3>The Mario Bot's Cards</h3>
+<span id="ai"></span>
+<script>
+var id;
+var url;
+var hiturl;
+var playersum=0;
+var computersum=0;
+var compcard;
+function bust(bool){
+  if(bool==true){
+    var message="Computer Wins, haha"
+  }
+  else{
+    var message="Nice job, you won"
+  }
+  alert(message)
+
+}
+function myFunction() {
+    $.ajax({
+       url: "http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=20",
+       success: function(data){
+
+ id=data.deck_id;
+ console.log(id);
+
+  url="http://deckofcardsapi.com/api/deck/"+id+"/draw/?count=3";
+
+  hiturl="http://deckofcardsapi.com/api/deck/"+id+"/draw/?count=1";
+ console.log(url);
+}
+});
+}
+
+function evaluate(value){
+  if(value=="ACE"){
+    console.log(value);
+    value="11";
+    console.log(value);
+  }
+  if(value=="JACK"){
+    console.log(value);
+    value="10";
+    console.log(value);
+  }
+  if(value=="QUEEN"){
+    console.log(value);
+    value="10";
+    console.log(value);
+
+  }
+  if(value=="KING"){
+    console.log(value);
+    value="10";
+    console.log(value);
+
+  }
+
+return parseInt(value);
+}
+$("#deal").click(function(){
+  $("#player").empty();
+  $("#ai").empty();
+  console.log(url);
+  $.ajax({
+  url: url,
+  success: function(output){
+    console.log(output);
+    var img1=output.cards[0].image;
+    var img2=output.cards[1].image;
+    var img3=output.cards[2].image;
+    console.log(img3);
+    var value1=evaluate(output.cards[0].value);
+    var value2=evaluate(output.cards[1].value);
+    var value3=evaluate(output.cards[2].value);
+    playersum=value1+value2;
+    computersum=value3;
+    $("#player").append("<img src='"+img1+"'><img src='"+img2+"'>");
+    compcard="<img src='"+img3+"'>";
+    $("#ai").append("<img src='"+img3+"'><img class=\"card\" src='https://s-media-cache-ak0.pinimg.com/564x/74/0b/df/740bdfde43a6acc7dd91ae8818ad4f7d.jpg'>");
+    if(playersum==21){
+      $("#player").append("<br><h1>BLACKJACK</h1>");
+    }
+  }
+
+  });
+});
+function check(){
+  if(playersum<computersum){
+    var message="Computer Wins, haha"
+  }
+  if(computersum<playersum){
+    var message="Nice job, you won"
+  }
+  if(computersum==playersum){
+    var message="It's a tie"
+  }
+  alert(message)
+}
+
+$("#hold").click(function(){
+  if(playersum===0){
+    alert("you need to be dealt cards first");
+  }
+  else{
+  $.ajax({
+  url: hiturl,
+  success: function(output){
+    $("#ai").empty();
+    console.log(output);
+    var img1=output.cards[0].image;
+    var value1=evaluate(output.cards[0].value);
+    computersum=computersum+value1;
+
+    $("#ai").append(compcard+"<img src='"+img1+"'>");
+
+    var holdon=parseInt($("#holdon").val());
+    console.log(holdon);
+    var counter=0
+      $.ajax({
+          url: "http://deckofcardsapi.com/api/deck/"+id+"/draw/?count=7",
+          success: function(newcards){
+            while(computersum<parseInt($("#holdon").val())){
+            var newcard=newcards.cards[counter]
+            console.log(newcards);
+            var newvalue=evaluate(newcard.value);
+            var newimg=newcard.image
+            console.log(newvalue);
+            computersum=computersum+newvalue;
+            $("#ai").append("<img src='"+newimg+"'>");
+            console.log("<img src='"+newimg+"'>");
+            counter++
+          }
+          if (computersum>21){
+            $("#ai").append("<br><h1>BUSTED</h1>")
+            bust(false)
+          }
+          else{
+            check()
+          }
+          }
+          });
+
+  }
+  });
+}
+});
+
+$("#hit").click(function(){
+  if(playersum===0){
+    alert("you need to be dealt cards first");
+  }
+  else{
+  $.ajax({
+  url: hiturl,
+  success: function(output){
+    console.log(output);
+    var img1=output.cards[0].image;
+
+    var value1=evaluate(output.cards[0].value);
+    playersum=playersum+value1;
+    if(playersum>21){
+      $("#player").append("<img src='"+img1+"'><br><h1>BUSTED</h1>");
+      bust(true)
+    }
+    else{
+    console.log(playersum);
+    $("#player").append("<img src='"+img1+"'>");
+  }
+  }
+  });
+}
+});
+</script>
+
+
+</body>
+</html>
