@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <body onload="getIndeces()">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  </head>
+  <body>
+
+    <table id="one">
+
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h3><p style="text-align:center;"></p></h3>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+
+
+    <script>
+    var storemoney=1000;
+    var arr=[];
+    var indeces=[];
+    var pokemon=[];
+    function store(){
+      $('table').empty()
+      $('p').empty()
+      var counter=0;
+      for(l=0;l<2;l++){
+        $('table').append("<tr>")
+
+        for(m=0;m<5;m++){
+          var message="<td><h1>"+pokemon[counter].name+"</h1><br><button id='sell"+pokemon[counter].name+"'>Sell "+ pokemon[counter].name+ " for "+pokemon[counter].sellprice+"</button><button id='buy"+pokemon[counter].name+"'>Buy "+ pokemon[counter].name+ " for "+pokemon[counter].buyprice+"</button><br><h4>Quantity:"+pokemon[counter].quantity+"</h4></td>"
+          $('table').append(message)
+          counter++
+        }
+
+        $('table').append("<br><br><br><br></tr>")
+      }
+      $('p').append(storemoney);
+      for(n=0; n<pokemon.length; n++ ){
+        (function(poke) {
+          $("#buy"+poke.name).click(function(){
+            if(poke.quantity===0){
+              alert("Sorry, we are out of stock")
+            }
+            else{
+            console.log(poke)
+          buy(poke)
+        }
+        });
+
+        })(pokemon[n]);
+      }
+      for(n=0; n<pokemon.length; n++ ){
+        (function(poke) {
+          $("#sell"+poke.name).click(function(){
+          if(poke.quantity>99){
+            alert("We don't want any more of that item")
+          }
+          else{
+          console.log(poke)
+          sell(poke)
+        }
+        });
+
+        })(pokemon[n]);
+      }
+    }
+    function buy(object){
+      console.log(object)
+      object.quantity--;
+      storemoney=storemoney+object.buyprice;
+      store()
+    }
+    function sell(object){
+      console.log(object)
+      object.quantity++;
+      storemoney=storemoney-object.sellprice
+      store()
+    }
+    function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+    function getIndeces(){
+    storemoney=1000;
+    for(i=0;i<721;i++){
+      arr.push(i)
+    }
+    temporaryarr=arr.slice()
+    for(i=0;i<10;i++){
+      var index=Math.floor(temporaryarr.length*Math.random())
+      pokemon.push({number: index,});
+      temporaryarr.splice(index,1)
+      pokemon[i].sellprice=10+Math.ceil(10*Math.random())
+      pokemon[i].buyprice=Math.floor(1.2*pokemon[i].sellprice)
+      pokemon[i].quantity=25+Math.ceil(10*Math.random())
+    }
+    console.log(indeces)
+    $.ajax({
+      url: "http://pokeapi.co/api/v2/pokemon/?limit=811",
+      method: "GET",
+      success: function(data){
+        console.log(data)
+        for(j=0;j<pokemon.length;j++){
+
+          pokemon[j].name=(data.results[pokemon[j].number].name)
+        }
+
+        for(k=0;k<pokemon.length;k++){
+          pokemon[k].name=capitalizeFirstLetter(pokemon[k].name)
+        }
+        console.log(pokemon)
+        store()
+
+    }
+    });
+  }
+    </script>
+  </body>
+</html>
