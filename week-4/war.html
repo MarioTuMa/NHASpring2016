@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<style>
+#bot{
+  float: left;
+}
+#ai{
+  float: right;
+}
+.card {
+    width: 250px;
+    height: 325px;
+
+}
+</style>
+<h1>War</h1>
+<br>
+<br>
+<br>
+<button id="deal" style="font-size:10px">Deal <br>Cards</button>
+<button id="war" style="font-size:10px">3, 2, 1,<br>War!!!!!</button>
+
+<br>
+
+<span style={text-align:left} id="bot"><h1>BOT</h1></span>
+
+<span style={text-align:right} id="ai"><h1>AI</h1></span>
+
+<script>
+var id;
+var url;
+var aicards=[];
+var botcards=[];
+var limbo=[];
+
+function evaluate(value){
+  if(value=="ACE"){
+    console.log(value);
+    value="14";
+    console.log(value);
+  }
+  if(value=="JACK"){
+    console.log(value);
+    value="11";
+    console.log(value);
+  }
+  if(value=="QUEEN"){
+    console.log(value);
+    value="12";
+    console.log(value);
+
+  }
+  if(value=="KING"){
+    console.log(value);
+    value="13";
+    console.log(value);
+
+  }
+
+return parseInt(value);
+}
+
+
+$("#deal").click(function(){
+  aicards=[]
+  botcards=[]
+  $.ajax({
+     url: "http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1",
+     success: function(data){
+
+id=data.deck_id;
+console.log(id);
+
+url="http://deckofcardsapi.com/api/deck/"+id+"/draw/?count=52";
+
+
+
+
+  $("#bot").empty();
+  $("#bot").append("<h2>BOT</h2>")
+  $("#ai").empty();
+  $("#ai").append("<h2>AI</h2>")
+  console.log(url);
+  $.ajax({
+  url: url,
+  success: function(output){
+    console.log(output)
+    for(i=0;i<26;i++){
+      botcards.push(output.cards[i])
+      aicards.push(output.cards[i+26])
+
+    }
+    console.log([botcards,aicards])
+          }
+
+  });
+}
+});
+});
+function check(){
+  var aicard=evaluate(limbo[0].value)
+  var botcard=evaluate(limbo[1].value)
+
+  console.log(["CHECKING",aicard,botcard])
+  if(aicard<botcard){
+
+    for(i=0;i<limbo.length;i++){
+      botcards.push(limbo[i]);
+      console.log(botcards)
+    }
+  }
+  if(aicard>botcard){
+    for(i=0;i<limbo.length;i++){
+      aicards.push(limbo[i]);
+      console.log(aicards)
+    }
+  }
+  if(aicard==botcard){
+    alert("it's a tie, this means war!")
+    limbo.unshift(aicards[3],botcards[3],aicards[2],botcards[2],aicards[1],botcards[1],aicards[0],botcards[0])
+
+    setup()
+    $("#ai").append("<br><img src='"+aicards[3].image+"'>")
+    $("#bot").append("<br><img src='"+botcards[3].image+"'>")
+    aicards.splice(0,4)
+    botcards.splice(0,4)
+
+    check()
+  }
+
+}
+function setup(){
+
+
+  $("#ai").append("<br><h2>AI</h2>Total Cards:"+(aicards.length)+"<br>COMING UP:<br>")
+
+  for(i=1;i<4;i++){
+    if(i==1){
+      $("#ai").append("<br>")
+    }
+  $("#ai").append(aicards[i].value+" OF "+aicards[i].suit+", ")
+}
+
+$("#bot").append("<br><h2>Bot</h2>Total Cards:"+(botcards.length)+"<br>COMING UP: <br>")
+
+for(i=1;i<4;i++){
+if(i==1){
+  $("#bot").append("<br>")
+}
+$("#bot").append(botcards[i].value+" OF "+botcards[i].suit+", ")
+}
+}
+$("#war").click(function(){
+  console.log(aicards)
+  limbo=[];
+  $("#ai").empty();
+  $("#bot").empty();
+  if(id===undefined){
+    alert("you need to be dealt cards first");
+  }
+  else{
+
+limbo.push(aicards[0],botcards[0])
+setup()
+
+
+$("#ai").append("<br><img src='"+aicards[0].image+"'>")
+$("#bot").append("<br><img src='"+botcards[0].image+"'>")
+aicards.splice(0,1)
+botcards.splice(0,1)
+
+check()
+  }
+  });
+
+
+</script>
+
+
+</body>
+</html>

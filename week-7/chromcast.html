@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <body onload="loadPage()">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
+  <body>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+
+
+    <p id="result"></p>
+    <script>
+      function loadPage(){
+
+
+        $.ajax({
+          url: "http://api.openweathermap.org/data/2.5/weather?q=NewYork&mode=json&units=imperial&cnt=7&appid=28a057e95b9a5a8be15e896131b438a7",
+          dataType:'json',
+          success: function(result){
+            console.log(result)
+          var picturetext=result.weather[0].main
+          console.log(picturetext)
+          var url="https://www.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext
+          console.log(url)
+          $.ajax({
+            url: url,
+            method:"GET",
+            dataType:'json',
+            success: function(result2){
+              console.log("hi")
+            console.log(result2)
+
+            }
+          })
+        }
+
+
+      })
+    }
+    </script>
+  </body>
+</html>
