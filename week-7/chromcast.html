@@ -31,7 +31,7 @@
           console.log(result);
         var picturetext=result.current.condition.text;
         console.log(picturetext);
-        var url="'https://www.flickr.com/services/rest?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext+"'";
+        var url="https://www.flickr.com/services/rest?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext;
         console.log(url);
         $.ajax({
           url: url,
