@@ -1,23 +1,55 @@
 <head>
     <title>Linear Search</title>
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
-    <script src="http://yahoo.github.io/gifshot/"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+$('b').hide();
+
+});
+    </script>
   </head>
     <body>
+
       <h1> It is the year 3016 and humans have suffered a massive plague.</h1>
        <h3>The remaining humans are scattered all over the earth. Help find new users to help save humanity.</h3>
       <button id="button">It's a button</button>
         <p id="p"></p>
+        <button id='b'>Use this to zoom in on the google image</button>
+        <p id="google"></p>
+        <p id="a"></p>
         <script>
-        var name
-        var gender
-        var contact
-        var postcode
-        var pictureurl
-        var username
-        var picture
-        var googleurl
-        $("button").click(function() {
+        var name;
+        var gender;
+        var contact;
+        var postcode;
+        var pictureurl;
+        var username;
+        var picture;
+        var googleurl;
+        var images=[];
+        var imgnum=0;
+
+        $("#b").click(function(){
+
+          console.log("I got clicked")
+          console.log(images)
+          if (imgnum>18){
+            imgnum=0;
+          }
+          else{
+            imgnum++;
+          }
+           console.log("<img src='"+images[imgnum]+"'>");
+          document.getElementById("google").innerHTML="<img src='"+images[imgnum]+"'>";
+
+        });
+
+
+
+
+        $("#button").click(function() {
+          imgnum=0;
           var sick = Math.random() * 2
           if (sick > 1) {
             var message = "I am sick"
@@ -43,30 +75,27 @@
                     var lat = datab.results[0].geometry.location.lat;
                     console.log([lat, long])
                     var url = "https://api.nasa.gov/planetary/earth/imagery?lon=" + long + "&lat=" + lat + "&date=2014-02-01&cloud_score=True&api_key=px6mbCQT9eudUrxOLmhk8XqgqT6f7z3DHPRsnVJ9"
-                    var googleurl="<img src='https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center="+lat+","+long+"&zoom=14&size=512x512&key=AIzaSyDJKlymwAXGSBqdl3YayHXgEO7nf3Ewyjk'>"
-                    console.log(url);
 
+  for (i=0;i<20;i++){
+    images[i]="https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center="+lat+","+long+"&zoom="+i+"&size=512x512&key=AIzaSyDJKlymwAXGSBqdl3YayHXgEO7nf3Ewyjk";
+  }
+console.log(images)
+                    var googleurl="<img src='https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center="+lat+","+long+"&zoom=1&size=512x512&key=AIzaSyDJKlymwAXGSBqdl3YayHXgEO7nf3Ewyjk'>"
+                    console.log([url,googleurl]);
+                    $('b').show();
 
-                        $.ajax({
+                       $.ajax({
                             url: url,
                             method: "GET",
                             success: function(datac) {
                             pictureurl = "<img src='" + datac.url + "'>"
                             console.log(pictureurl + " nasa")
-                            /*var gif=gifshot.createGIF({
-    images: [
-        'http://i.imgur.com/2OO33vX.jpg',
-        'http://i.imgur.com/qOwVaSN.png',
-        'http://i.imgur.com/Vo5mFZJ.gif'
-    ]
-}, function (obj) {
-    if (!obj.error) {
-        var image = obj.image, animatedImage = document.createElement('img');
-        animatedImage.src = image;
-        document.body.appendChild(animatedImage);
-    }
-});       I am trying to make a gif of the picture zooming inbut I always get errors*/
-                            document.getElementById("p").innerHTML = name + gender + contact + pictureurl + googleurl+ username + picture
+
+                            document.getElementById("p").innerHTML = name + gender + contact + pictureurl
+                            document.getElementById("google").innerHTML = "<br>"+googleurl
+
+
+                            document.getElementById("a").innerHTML = username + picture
 
                           }
                         })
@@ -82,6 +111,7 @@
                 }
               });
             });
+
         </script>
     </body>
   </html>
