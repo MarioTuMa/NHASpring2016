@@ -12,31 +12,109 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   </head>
   <body>
-
+  <style>
+  #icon{
+    position: fixed;
+    bottom: 0;
+    right: 150px;
+    width: 150px;
+    height: 100px;
+  }
+  #time{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 150px;
+    height: 100px;
+  }
+  </style>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 
 
 
-    <p id="result"></p>
+    <div id="icon"></div>
+    <div id="time"></div>
     <script>
-    function loadPage(){
 
 
+      function getTime(){
+        $("#time").empty();
+        $("#time").css("color","white")
+        var d = new Date(); // for now
+        var hours=d.getHours();
+        var minutes=d.getMinutes();
+        var amorpm;
+        minutes=minutes;
+        if(hours>11){
+          amorpm="pm";
+
+          if(hours>12){
+            hours=hours-12
+          }
+        }
+        else{
+          if(hours===0){
+            hours=hours+12
+          }
+          amorpm="am";
+        }
+        if(minutes<10){
+          minutes="0"+minutes.toString()
+        }
+        console.log(hours+":"+minutes+" "+amorpm)
+        $("#time").append("<h3>"+hours+":"+minutes+" "+amorpm+"</h3>")
+      }
+      setInterval(getTime, 1000);
+
+      function loadPage(){
+        navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      console.log(position);
+        console.log("http://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7")
       $.ajax({
-        url: "https://api.apixu.com/v1/current.json?key=d887e6c3690f41d5a9a183747160807&q=Manhattan",
+        url: "http://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7",
         dataType:'json',
-        success: function(result){
-          console.log(result);
-        var picturetext=result.current.condition.text;
+        success: function(data){
+          console.log(data);
+        var picturetext=data.list[0].weather[0].description;
+
+
+        picturetext=picturetext.replace(" ","");
+        picturetext=picturetext.replace(" ","");
         console.log(picturetext);
-        console.log("https://www.flickr.com/services/rest?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext)
+        var url="https://www.flickr.com/services/rest?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext+"&nojsoncallback=?"
+        console.log(url)
         $.ajax({
-          url: "https://www.flickr.com/services/rest?method=flickr.photos.search&format=json&api_key=3049e81aaf0db5b33b9a5e46d37c713f&text="+picturetext,
+          url: url,
+          method: "GET",
           success: function(result){
             console.log("hi");
           console.log(result);
+          var index=Math.floor(20*Math.random());
+          console.log(index)
+          var imginfo=result.photos.photo[index];
+          var farm=imginfo.farm
+          var serverid=imginfo.server
+          var id=imginfo.id
+          var secret=imginfo.secret
+          var image="https://farm"+farm+".staticflickr.com/"+serverid+"/"+id+"_"+secret+"_c.jpg"
+          console.log(image)
+          $("body").css({"background-image":"url("+image+")","background-size":"100%"})
+
+          var icon=data.list[0].weather[0].icon
+          icon="<img src='http://openweathermap.org/img/w/"+icon+".png'>"
+          console.log(icon)
+          getTime()
+          $("#icon").append(icon)
+
+
+
+
 
           }
 
@@ -45,6 +123,7 @@
 
 
     });
+  });
   }
 
 
