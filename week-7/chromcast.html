@@ -8,23 +8,22 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
   </head>
   <body>
   <style>
   #icon{
     position: fixed;
     bottom: 0;
-    right: 150px;
-    width: 150px;
-    height: 100px;
+    right: 100px;
+    width: 55px;
+    height: 90px;
   }
   #time{
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 150px;
+    width: 100px;
     height: 100px;
   }
   </style>
@@ -69,15 +68,17 @@
       setInterval(getTime, 1000);
 
       function loadPage(){
+        console.log("hello world")
         navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
+
+      pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
       console.log(position);
         console.log("http://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7")
       $.ajax({
-        url: "http://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7",
+        url: "https://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7",
         dataType:'json',
         success: function(data){
           console.log(data);
@@ -125,7 +126,7 @@
     });
   });
   }
-
+//noprotect
 
 
     </script>
