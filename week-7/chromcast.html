@@ -76,7 +76,7 @@
         lng: position.coords.longitude
       };
       console.log(position);
-
+      console.log("https://api.wunderground.com/api/4ae208895441063e/conditions/q/"+pos.lat+","+pos.lng+".json")
       $.ajax({
         url: "https://api.wunderground.com/api/4ae208895441063e/conditions/q/"+pos.lat+","+pos.lng+".json",
         dataType:'json',
