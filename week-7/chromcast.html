@@ -76,13 +76,13 @@
         lng: position.coords.longitude
       };
       console.log(position);
-        console.log("http://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7")
+
       $.ajax({
-        url: "https://api.openweathermap.org/data/2.5/find?lat="+pos.lat+"&lon="+pos.lng+"&units=imperial&appid=28a057e95b9a5a8be15e896131b438a7",
+        url: "https://api.wunderground.com/api/4ae208895441063e/conditions/q/"+pos.lat+","+pos.lng+".json",
         dataType:'json',
         success: function(data){
           console.log(data);
-        var picturetext=data.list[0].weather[0].description;
+        var picturetext=data.current_observation.weather
 
 
         picturetext=picturetext.replace(" ","");
@@ -107,8 +107,8 @@
           console.log(image)
           $("body").css({"background-image":"url("+image+")","background-size":"100%"})
 
-          var icon=data.list[0].weather[0].icon
-          icon="<img src='http://openweathermap.org/img/w/"+icon+".png'>"
+          var icon=data.current_observation.icon_url
+          icon="<img src='"+icon+"''>"
           console.log(icon)
           getTime()
           $("#icon").append(icon)
