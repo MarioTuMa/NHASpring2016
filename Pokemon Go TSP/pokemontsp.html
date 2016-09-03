@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title></title><!-- Bootstrap -->
+    <link href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+    rel="stylesheet">
+    <link href=
+    "https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+    rel="stylesheet">
+</head>
+<body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+    </script>
+    <h2>GREEDY ALGORITHM</h2><button>Submit</button>
+    <p id="result"></p>
+    <script>
+    function in_array(needle, haystack) {
+    var length = haystack.length;
+    for(var i = 0; i < length; i++) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
+    $("button").click(function() {
+      $.ajax({
+        url: "http://localhost:8001/raw_data?pokemon=false&pokestops=true&gyms=false&scanned=false&spawnpoints=false&swLat=40.762040&swLng=-73.993463&neLat=40.799449&neLng=-73.943143&_=1472505905137",
+        success: function(result) {
+          var pokestops = result.pokestops
+
+          var locations = [];
+          for (i = 0; i < pokestops.length; i++) {
+              if (Math.abs(pokestops[i].longitude - 0.7437994 *
+                  pokestops[i].latitude + 104.299630437
+              ) < 0.0055) {
+                  if (Math.abs(1.9 * pokestops[i].latitude +
+                      pokestops[i].longitude - 3.52226243
+                  ) < 0.0425) {
+                      locations.push([pokestops[i].latitude,
+                          pokestops[i].longitude
+                      ])
+                  }
+              }
+          }
+          console.log(locations)
+          var distancepairs = [];
+          for (i = 0; i < locations.length; i++) {
+              var irow = []
+              for (j = 0; j < locations.length; j++) {
+                  irow.push(Math.sqrt((69*locations[i][0] - 69*locations[j][0]) ** 2 + (52.45*locations[i][1] - 52.45*locations[j][1]) ** 2))
+              }
+              distancepairs.push(irow)
+          }
+
+      var minimumtotaldistance=17.5
+      var bestordering=[]
+      for(k=0;k< locations.length;k++){
+      var totaldistance=0;
+      var ordering = [k];
+      var counter = 0;
+      for (i = 0; i < locations.length-1; i++) {
+
+
+        var min=Math.max.apply(null, distancepairs[ordering[counter]]);
+          for (j = 0; j < locations.length; j++){
+
+            if(distancepairs[ordering[counter]][j]<min && !in_array(j,ordering)){
+
+              min=distancepairs[ordering[counter]][j]
+
+            }
+          }
+
+          ordering.push(distancepairs[ordering[counter]].indexOf(min))
+          totaldistance=totaldistance+min
+          counter++
+        }
+          console.log(ordering[0])
+
+          ordering.push(ordering[0])
+          console.log(distancepairs[ordering[counter]][ordering[0]])
+          totaldistance=totaldistance+distancepairs[ordering[counter]][ordering[0]]
+
+        if(totaldistance<minimumtotaldistance){
+          minimumtotaldistance=totaldistance
+          bestordering=ordering
+        }
+      }
+      console.log(bestordering)
+      console.log(distancepairs[84]);
+
+      }
+  })
+})
+    </script>
+</body>
+</html>

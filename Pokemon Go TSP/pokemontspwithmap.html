@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple Polylines</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+
+      // This example creates a 2-pixel-wide red polyline showing the path of William
+      // Kingsford Smith's first trans-Pacific flight between Oakland, CA, and
+      // Brisbane, Australia.
+      function in_array(needle, haystack) {
+      var length = haystack.length;
+      for(var i = 0; i < length; i++) {
+          if(haystack[i] == needle) return true;
+      }
+      return false;
+  }
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: {lat: 40.3416119, lng: -74.5825576},
+          mapTypeId: 'terrain'
+        });
+        $.ajax({
+          url: "http://localhost:8001/raw_data?pokemon=false&pokestops=true&gyms=false&scanned=false&spawnpoints=false&swLat=40.32553677258215&swLng=-74.59192225526124&neLat=40.3412394892545&neLng=-74.51982447694093&_=1472740634863",
+          success: function(result) {
+            var pokestops = result.pokestops
+
+            var locations = [];
+            for (i = 0; i < pokestops.length; i++) {
+
+                        locations.push([pokestops[i].latitude,
+                            pokestops[i].longitude
+                        ])
+
+            }
+            console.log(locations)
+            var url="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&mode=WALKING&origins="
+            for(i=0;i<locations.length;i++){
+              url=url+locations[i][0]+","+locations[i][1]
+              if(i<locations.length-1){
+                url=url+"|"
+              }
+            }
+
+            url=url+"&destinations="
+            for(i=0;i<locations.length;i++){
+              url=url+locations[i][0]+","+locations[i][1]
+              if(i<locations.length-1){
+                url=url+"|"
+              }
+            }
+            url=url+"&key=AIzaSyAzlSYVnEhtdPsNis5DjUpZdEfbl2goemk"
+            console.log(url)
+            $.ajax({
+              url: url,
+              crossDomain: true,
+              dataType: "json",
+              success:function(data){
+            var distancepairs = [];
+            for (i = 0; i < locations.length; i++) {
+                var irow = []
+                for (j = 0; j < locations.length; j++) {
+                    irow.push(data.rows[i].elements[j].value/1609.344)
+                }
+                distancepairs.push(irow)
+            }
+
+        var minimumtotaldistance=17.5
+        var bestordering=[]
+        for(k=0;k< locations.length;k++){
+        var totaldistance=0;
+        var ordering = [k];
+        var counter = 0;
+        for (i = 0; i < locations.length-1; i++) {
+
+
+          var min=Math.max.apply(null, distancepairs[ordering[counter]]);
+            for (j = 0; j < locations.length; j++){
+
+              if(distancepairs[ordering[counter]][j]<min && !in_array(j,ordering)){
+
+                min=distancepairs[ordering[counter]][j]
+
+              }
+            }
+
+            ordering.push(distancepairs[ordering[counter]].indexOf(min))
+            totaldistance=totaldistance+min
+
+            counter++
+          }
+          totaldistance=totaldistance+distancepairs[ordering[counter]][ordering[0]]
+          ordering.push(ordering[0])
+          if(totaldistance<minimumtotaldistance){
+            minimumtotaldistance=totaldistance
+            bestordering=ordering
+          }
+        }
+        console.log(minimumtotaldistance)
+        console.log(bestordering)
+
+
+    var flightPlanCoordinates = [
+
+    ];
+    var flightlog=[]
+    for(i=0;i<bestordering.length;i++){
+      flightPlanCoordinates.push({lat: locations[bestordering[i]][0], lng: locations[bestordering[i]][1]})
+      if(i<10){
+        flightlog.push("{lat: "+locations[bestordering[i]][0]+", lng:"+ locations[bestordering[i]][1]+"}")
+      }
+      var marker = new google.maps.Marker({
+            position: {lat: locations[bestordering[i]][0], lng: locations[bestordering[i]][1]},
+            map: map,
+            title: 'Hello World!'
+          });
+    }
+    console.log(flightlog)
+    console.log(flightPlanCoordinates)
+
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          geodesic: true,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+      }
+        })
+      }
+    }
+  )}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvMvFwad7QwQI3wlFjN-lld69R5mfwxw&callback=initMap">
+    </script>
+  </body>
+</html>
